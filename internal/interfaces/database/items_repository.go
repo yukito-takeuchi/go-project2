@@ -88,6 +88,36 @@ func (r *ItemRepository) Create(ctx context.Context, item *entity.Item) (*entity
 	return r.FindByID(ctx, id)
 }
 
+func (r *ItemRepository) Update(ctx context.Context, item *entity.Item) (*entity.Item, error) {
+	query := `
+        UPDATE items
+        SET name = ?, brand = ?, purchase_price = ?, updated_at = ?
+        WHERE id = ?
+    `
+
+	result, err := r.Execute(ctx, query,
+		item.Name,
+		item.Brand,
+		item.PurchasePrice,
+		time.Now(),
+		item.ID,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %s", domainErrors.ErrDatabaseError, err.Error())
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return nil, fmt.Errorf("%w: failed to get rows affected: %s", domainErrors.ErrDatabaseError, err.Error())
+	}
+
+	if rowsAffected == 0 {
+		return nil, domainErrors.ErrItemNotFound
+	}
+
+	return r.FindByID(ctx, item.ID)
+}
+
 func (r *ItemRepository) Delete(ctx context.Context, id int64) error {
 	query := `DELETE FROM items WHERE id = ?`
 
