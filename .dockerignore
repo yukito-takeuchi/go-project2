@@ -1,0 +1,6 @@
+.git
+.env
+*.md
+.vscode
+.DS_Store
+*.log
