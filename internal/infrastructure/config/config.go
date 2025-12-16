@@ -32,7 +32,7 @@ func init() {
 // DB接続文字列を返す
 func GetDSN() string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true&loc=Local&sql_mode=TRADITIONAL",
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true&loc=Local&multiStatements=true",
 		DBUser, DBPassword, DBHost, DBPort, DBName,
 	)
 }
